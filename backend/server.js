@@ -4,7 +4,7 @@ import { connectDB } from "./config/db.js"; //don't forget to add db.js
 import Product from "./models/product.model.js";
 import UserInfo from "./models/user.model.js";
 import mongoose from "mongoose";
-
+import productRoutes from "./routes/product.route.js";
 
 dotenv.config();
 
@@ -12,62 +12,55 @@ const app = express();
 
 app.use(express.json()); //allow us to accecpt json data in the body
 
-app.get("/api/products",async(req,res)=>{
-    try {
-        const products = await Product.find({});
-        res.status(201).json({success:true,data:products})
-    } catch (error) {
-        res.status(400).json({success:false,message:"No data"})
-    }
-})
 
+app.use("/api/products",productRoutes)
 //create
-app.post("/api/products",async(req,res)=>{
-    const product = req.body;
+// app.post("/api/products",async(req,res)=>{
+//     const product = req.body;
 
-    if(!product.name || !product.image || !product.price){
-        return res.status(400).json({success: false, message: "Please provide all fields"});
-    }
+//     if(!product.name || !product.image || !product.price){
+//         return res.status(400).json({success: false, message: "Please provide all fields"});
+//     }
 
-    const newProduct = new Product(product)
+//     const newProduct = new Product(product)
 
-    try {
-        await newProduct.save();
-        res.status(201).json({success: true, data: newProduct});
-    } catch (error) {
-        console.error("Error in Create Product:",error.message)
-        res.status(500).json({success: false, message:"Server Error"})
-    }
-});
+//     try {
+//         await newProduct.save();
+//         res.status(201).json({success: true, data: newProduct});
+//     } catch (error) {
+//         console.error("Error in Create Product:",error.message)
+//         res.status(500).json({success: false, message:"Server Error"})
+//     }
+// });
 
 //update
-app.put("/api/products/:id",async(req,res)=>{
-    const {id} = req.params;
+// app.put("/api/products/:id",async(req,res)=>{
+//     const {id} = req.params;
 
-    const product = req.body;
+//     const product = req.body;
     
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        return res.status(404).json({success:false,message:"ID not found!"})
-    }
+//     if(!mongoose.Types.ObjectId.isValid(id)){
+//         return res.status(404).json({success:false,message:"ID not found!"})
+//     }
 
-    try {
-        const updatedProduct =await Product.findByIdAndUpdate(id,product,{new:true})
-        res.status(201).json({success:true, data: updatedProduct})
-    } catch (error) {
-        res.status(500).json({success:false, message:"Server Error"})
-    }
-})
+//     try {
+//         const updatedProduct =await Product.findByIdAndUpdate(id,product,{new:true})
+//         res.status(201).json({success:true, data: updatedProduct})
+//     } catch (error) {
+//         res.status(500).json({success:false, message:"Server Error"})
+//     }
+// })
     
 //delete 
-app.delete("/api/products/:id",async(req,res)=>{
-    const {id} = req.params;
-    try {
-        await Product.findByIdAndDelete(id)
-        res.status(201).json({success:true,message:"Deleted!"})
-    } catch (error) {
-        res.status(400).json({success:false,message:"Incorrect ID"})
-    }
-})
+// app.delete("/api/products/:id",async(req,res)=>{
+//     const {id} = req.params;
+//     try {
+//         await Product.findByIdAndDelete(id)
+//         res.status(201).json({success:true,message:"Deleted!"})
+//     } catch (error) {
+//         res.status(400).json({success:false,message:"Incorrect ID"})
+//     }
+// })
 
 // app.get("/api/products",(res,req)=>{
 //     res.
