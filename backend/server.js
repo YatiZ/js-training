@@ -1,19 +1,27 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js"; //don't forget to add db.js
-import Product from "./models/product.model.js";
-import UserInfo from "./models/user.model.js";
-import mongoose from "mongoose";
 import productRoutes from "./routes/product.route.js";
+import path from "path";
 
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 5001;
+const __dirname = path.resolve();
 
 app.use(express.json()); //allow us to accecpt json data in the body
 
 
 app.use("/api/products",productRoutes)
+
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(path.join(__dirname,"/frontend/dist")));
+
+    app.get("*", (req, res)=>{
+        res.sendFile(path.resolve(__dirname, "frontend","dist","index.html"))
+    })
+}
 //create
 // app.post("/api/products",async(req,res)=>{
 //     const product = req.body;
@@ -67,24 +75,9 @@ app.use("/api/products",productRoutes)
 // })
 
 //for user database
-app.post("/api/users",async(req,res)=>{
-    const user = req.body;
 
-    if(!user.username || !user.email || !user.address){
-        return res.status(400).json({success:false, message:"Please provide all data!"})
-    }
 
-    const newUser = new UserInfo(user)
-
-    try {
-        await newUser.save();
-        res.status(201).json({success:true, data: newUser});
-    } catch (error) {
-        res.status(500).json({success:false, message:"Server Error"})
-    }
-});
-
-app.listen(5001,()=>{
+app.listen(PORT,()=>{
     connectDB();
     console.log("Server started at http://localhost:5001");
 });
