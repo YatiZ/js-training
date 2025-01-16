@@ -17,30 +17,30 @@ const CreatePage = () => {
     price: "",
     image: "",
   });
-  const {createProduct} = useProductStore();
+  const { createProduct } = useProductStore();
 
   //toast
   const toast = useToast();
-  const handleUpload = async() => {
-    const {success, message} = await createProduct(newProduct);
-    console.log(success, message)
-    if(!success){
-        toast({
-            title:"Error",
-            description: message,
-            status: "error",
-            isClosable: true
-        })
-    }else{
-        toast({
-            title: 'Success',
-            description: message,
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-        })
+  const handleUpload = async () => {
+    const { success, message } = await createProduct(newProduct);
+    console.log(success, message);
+    if (!success) {
+      toast({
+        title: "Error",
+        description: message,
+        status: "error",
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: "Success",
+        description: message,
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
     }
-    setNewProduct({name:"",price:"",image:""});
+    setNewProduct({ name: "", price: "", image: "" });
   };
   return (
     <Container maxW={"container.sm"}>
@@ -80,9 +80,10 @@ const CreatePage = () => {
                 setNewProduct({ ...newProduct, image: e.target.value })
               }
             />
-            <Button onClick={handleUpload} w="full">Create</Button>
+            <Button onClick={handleUpload} w="full">
+              Create
+            </Button>
           </VStack>
-      
         </Box>
       </VStack>
     </Container>
